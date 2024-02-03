@@ -5,11 +5,25 @@ import { fetchHome } from '../../../api';
 import { HomeList } from './CatalogPageList';
 import { Loader } from '../../LoaderSpinner/LoaderSpinner';
 
+import Modal from '../../../components/Modal/Modal';
+
 const CatalogPage = () => {
   const [trends, setTrends] = useState([]);
   const [loader, setLoader] = useState(false);
   const [page, setPage] = useState(1);
   const [isLastPage, setIsLastPage] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedItemIndex, setSelectedItemIndex] = useState(null);
+
+  const openModal = index => {
+    setModalVisible(true);
+    setSelectedItemIndex(index);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+    setSelectedItemIndex(null);
+  };
 
   const loadMore = async () => {
     setLoader(true);
@@ -51,9 +65,12 @@ const CatalogPage = () => {
   return (
     <>
       {loader && <Loader />}
-      <HomeList items={trends} />
+      <HomeList items={trends} openModal={openModal} />
       {!isLastPage && <button onClick={loadMore}>Load More</button>}
       {isLastPage && <p>This is the entire catalog.</p>}
+      {modalVisible && (
+        <Modal item={trends[selectedItemIndex]} closeModal={closeModal} />
+      )}
       <Toaster position="bottom-center" reverseOrder={true} />
     </>
   );

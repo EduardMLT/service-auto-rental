@@ -1,5 +1,4 @@
 import { ArticleHomePage, DivTitle } from './HomePage.styled';
-// import MovingText from './HomePageAnimation';
 
 const HomePage = () => {
   return (
