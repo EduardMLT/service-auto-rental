@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 
 import { fetchHome } from '../../../api';
@@ -8,29 +8,42 @@ import { Loader } from '../../LoaderSpinner/LoaderSpinner';
 const CatalogPage = () => {
   const [trends, setTrends] = useState([]);
   const [loader, setLoader] = useState(false);
+  const [page, setPage] = useState(1);
+  const [isLastPage, setIsLastPage] = useState(false);
 
-  console.log('1.3 - це - CatalogPage -', { trends, setTrends });
+  const loadMore = async () => {
+    setLoader(true);
+    try {
+      const nextPageItems = await fetchHome(page + 1);
+      if (nextPageItems.length === 0) {
+        setIsLastPage(true);
+      } else {
+        setTrends(prevItems => [...prevItems, ...nextPageItems]);
+        setPage(prevPage => prevPage + 1);
+      }
+    } catch (error) {
+      toast.error(error);
+    } finally {
+      setLoader(false);
+    }
+  };
 
   useEffect(() => {
     async function getMovies() {
-      console.log('1.4 - це - CatalogPage -');
-
       setLoader(true);
       try {
         const movies = await fetchHome();
-
-        console.log('1.5 - це - CatalogPage -');
-
-        setTrends(movies);
+        if (movies.length === 0) {
+          setIsLastPage(true);
+        } else {
+          setTrends(movies);
+        }
       } catch (error) {
         toast.error(error);
       } finally {
-        console.log('1.6 - це - CatalogPage -', { setTrends });
-
         setLoader(false);
       }
     }
-    console.log('1.7 - це - CatalogPage -');
 
     getMovies();
   }, []);
@@ -39,6 +52,8 @@ const CatalogPage = () => {
     <>
       {loader && <Loader />}
       <HomeList items={trends} />
+      {!isLastPage && <button onClick={loadMore}>Load More</button>}
+      {isLastPage && <p>This is the entire catalog.</p>}
       <Toaster position="bottom-center" reverseOrder={true} />
     </>
   );
