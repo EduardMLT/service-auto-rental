@@ -36,7 +36,6 @@ export const fetchHome = async (page = 1, filters) => {
         car => Number(car.mileage) <= Number(filters.maxMileage)
       );
     }
-
     const startIndex = (page - 1) * filters.perPage;
     const endIndex = startIndex + filters.perPage;
     const currentItems = filteredCars.slice(startIndex, endIndex);
