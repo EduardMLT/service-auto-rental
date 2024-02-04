@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 
 import { fetchHome } from '../../../api';
@@ -82,17 +82,11 @@ const CatalogPage = () => {
     }
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    getMovies();
-  }, [filters]);
-
-  const getMovies = async () => {
+  const getMovies = useCallback(async () => {
     setLoader(true);
     try {
       console.log('getMovies - filters ', { filters });
       const movies = await fetchHome(1, filters);
-      // console.log('getMovies - movies ', movies, movies.length);
       if (movies.length === 0) {
         console.log('1.1 -getMovies  ');
         setIsLastPage(true);
@@ -105,7 +99,11 @@ const CatalogPage = () => {
     } finally {
       setLoader(false);
     }
-  };
+  }, [setLoader, setIsLastPage, setTrends, filters]);
+
+  useEffect(() => {
+    getMovies();
+  }, [getMovies]);
 
   return (
     <>
