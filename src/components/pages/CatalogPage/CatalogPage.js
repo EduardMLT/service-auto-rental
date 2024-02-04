@@ -82,6 +82,7 @@ const CatalogPage = () => {
     }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     getMovies();
   }, [filters]);
@@ -89,11 +90,11 @@ const CatalogPage = () => {
   const getMovies = async () => {
     setLoader(true);
     try {
-      console.log('getMovies - filters ', {filters});
+      console.log('getMovies - filters ', { filters });
       const movies = await fetchHome(1, filters);
       // console.log('getMovies - movies ', movies, movies.length);
       if (movies.length === 0) {
-       console.log('1.1 -getMovies  ');
+        console.log('1.1 -getMovies  ');
         setIsLastPage(true);
       } else {
         console.log('1.2 -getMovies  ');
@@ -137,7 +138,6 @@ const CatalogPage = () => {
             console.log("make", make);
             <option value="">Select Make</option>
             {makes.map(make => (
-              
               <option key={make} value={make}>
                 {make}
               </option>
