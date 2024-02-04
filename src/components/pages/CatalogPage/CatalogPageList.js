@@ -5,7 +5,9 @@ import { List, Item, TitleSpan } from './CatalogPageList.styled';
 export const HomeList = ({ items, openModal }) => {
   return (
     <List>
+      
       {items.map(({ id, make, model, img }, index) => {
+        // console.log({  make, model});
         return (
           <Item key={id}>
             <div onClick={() => openModal(index)}>
